@@ -1,0 +1,69 @@
+.signinside {
+    height: 75vh;
+    margin: 10%;
+    border: 3px solid white;
+}
+
+.signincont {
+    width: 50vw;
+}
+
+.text-main {
+    text-align: center;
+    font-size: 32px;
+}
+
+.table-main {
+    border: 1px solid white;
+    height: 45vh;
+    width: 35vw;
+    margin-left: 5%;
+}
+
+.table-header {
+    background-color: black;
+    height: 10%;
+}
+
+.add-stock {
+    display: flex;
+    margin-left: 5%;
+    border: 1px solid white;
+    width: 35vw;
+}
+
+.addstockbtn {
+    margin-left: 5%;
+    width: 8em;
+    height: 2em;
+    margin-top: 1em;
+    background-color: #0F1D24;
+    color: white;
+    font-family: 'Kanit', sans-serif;
+    border: 1px solid white;
+    border-radius: 10px;
+}
+
+.total-value {
+    flex: 1;
+}
+
+.add-stock-button {
+    flex: 1.5;
+}
+
+.Confirm-stock-button {
+    margin-top: 2em;
+    text-align: center;
+}
+
+.Confirmstockbtn {
+    width: 8em;
+    height: 2em;
+    background-color: #0F1D24;
+    color: white;
+    font-family: 'Kanit', sans-serif;
+    border: 1px solid white;
+    border-radius: 10px;
+    font-size: 25px;
+}
