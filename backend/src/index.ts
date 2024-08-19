@@ -5,14 +5,15 @@ import express from "express";
 const app = express();
 const router = express.Router();
 
-app.use(express.json()); // Middleware to parse JSON bodies
+app.use(express.json());
+app.use(cors());
 
 // Initialize Firebase if not already initialized
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.applicationDefault(),
   });
-  console.log("successfull");
+  console.log("Firebase initialized successfully");
 }
 
 // Function to check if Firebase is initialized
@@ -20,26 +21,32 @@ function isFirebaseInitialized() {
   return admin.apps.length > 0;
 }
 
-router.post("/login", async (req, res) => {
-  const idToken = req.body.idToken;
+// Route for user signup using email and password
+router.post("/signup", async (req, res) => {
+  const { email, password } = req.body;
   try {
-    const decodedToken = await admin.auth().verifyIdToken(idToken);
-    const uid = decodedToken.uid;
-    // Proceed with login logic using the uid
-    res.status(200).send({ message: "User logged in successfully", uid });
+    const userRecord = await admin.auth().createUser({
+      email,
+      password,
+    });
+    res
+      .status(201)
+      .send({ message: "User created successfully", uid: userRecord.uid });
   } catch (error) {
-    res.status(401).send({ message: "Unauthorized", error });
+    res.status(400).send({ message: "Error creating user", error });
   }
 });
 
-router.post("/logout", (req, res) => {
-  // Implement logout logic here
-  res.status(200).send({ message: "User logged out successfully" });
-});
-
-router.post("/reset-password", (req, res) => {
-  // Implement password reset logic here
-  res.status(200).send({ message: "Password reset link sent" });
+// Route for user login using email and password
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await admin.auth().getUserByEmail(email);
+    const idToken = await admin.auth().createCustomToken(user.uid);
+    res.status(200).send({ message: "User logged in successfully", idToken });
+  } catch (error) {
+    res.status(401).send({ message: "Unauthorized", error });
+  }
 });
 
 app.use("/api", router);

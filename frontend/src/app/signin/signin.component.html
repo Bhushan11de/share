@@ -25,7 +25,13 @@
         <p class="create-account">
           Don't have an account? <a href="/signup">Sign Up</a>
         </p>
-        <button class="textsignin buttontext" type="submit">Sign In</button>
+        <button
+          class="textsignin buttontext"
+          type="button"
+          (click)="onSubmit()"
+        >
+          Sign In
+        </button>
       </div>
     </div>
   </div>
