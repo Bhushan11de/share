@@ -4,7 +4,13 @@
     height: 25px;
 }
 
-input {
+.name-id-input {
+    margin-top: 2.5%;
+    margin-bottom: 2.5%;
+    height: 25px;
+}
+
+.input {
     width: 88%;
 
     height: 24px;

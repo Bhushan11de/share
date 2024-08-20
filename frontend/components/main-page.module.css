@@ -1,0 +1,25 @@
+/* components/main-page.module.css */
+  .imagescreen {
+    text-align: center;
+  }
+  
+  .marginscreen {
+    margin: 20px;
+  }
+  
+  .logo-image {
+    width: 150px;
+    height: auto;
+  }
+  
+  .company-name {
+    font-size: 2em;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
+  .company-tagline {
+    font-size: 1.2em;
+    color: #555;
+    margin-top: 5px;
+  }
