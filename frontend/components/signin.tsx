@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'next/router';
+import styles from './signin.module.css'; // Import the CSS Module
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -42,16 +43,17 @@ const SignIn = () => {
     };
 
     return (
-        <div className="signin">
-            <div className="signincont">
-                <div className="signinside">
-                    <p className="head-sign">Sign In</p>
-                    <form onSubmit={handleSignIn} className="input-fields">
-                        <label className="textsignin" htmlFor="email">Email-ID</label>
-                        <div className="email-id-input">
+        <div className={styles.signin}>
+            <div className={styles.signincont}>
+                <div className={styles.signinside}>
+                    <p className={styles.headsignin}>Sign In</p>
+                    <form onSubmit={handleSignIn} className={styles.inputfields}>
+                        <label className={styles.textsignin} htmlFor="email">Email-ID</label>
+                        <div className={styles.inputoutdiv}>
                             <input
                                 type="email"
                                 id="email"
+                                className={styles.emailidinput}
                                 name="email"
                                 placeholder="Enter your email"
                                 value={email}
@@ -60,23 +62,24 @@ const SignIn = () => {
                             />
                         </div>
 
-                        <label className="textsignin" htmlFor="password">Password</label>
-                        <div className="password-input">
+                        <label className={styles.textsignin} htmlFor="password">Password</label>
+                        <div className={styles.inputoutdiv}>
                             <input
                                 type="password"
                                 id="password"
                                 name="password"
+                                className={styles.passwordinput}
                                 placeholder="Enter your password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
                             />
                         </div>
-                        <p className="create-account">
-                            Don't have an account? <a href="/signup">Sign Up</a>
+                        <p className={styles.createaccount}>
+                            Don't have an account? <a href="/signup" className={styles.signuproute}>Sign Up</a>
                         </p>
                         <button
-                            className="textsignin buttontext"
+                            className={styles.buttontext}
                             type="submit"
                             disabled={loading}
                         >

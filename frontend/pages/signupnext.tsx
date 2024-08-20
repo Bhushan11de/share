@@ -3,7 +3,7 @@ import SignupNext from '../components/signupnext';
 import MainPage from '../components/main-page';
 const SignupPage = () => {
   return (
-    <div>
+    <div style={{ display: 'flex' }}>
     <MainPage/>
       <SignupNext />
     </div>

@@ -1,11 +1,9 @@
-"use client";
-
 import React, { useState } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/router';
-import styles from './signup.module.css'; // Import the CSS Module
+import styles from './signin.module.css'; // Reuse the CSS Module from signin
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -54,17 +52,18 @@ const Signup: React.FC = () => {
     };
 
     return (
-        <div className={styles.signup}>
-            <div className={styles.signupcont}>
-                <div className={styles.signupside}>
-                    <p className={styles.headSignup}>Sign Up</p>
-                    <form onSubmit={handleSignup} className={styles.inputFields}>
-                        <label className={styles.textSignup} htmlFor="name">Name</label>
-                        <div className={styles.nameInput}>
+        <div className={styles.signin}>
+            <div className={styles.signincont}>
+                <div className={styles.signinside}>
+                    <p className={styles.headsignin}>Sign Up</p>
+                    <form onSubmit={handleSignup} className={styles.inputfields}>
+                        <label className={styles.textsignin} htmlFor="name">Name</label>
+                        <div className={styles.inputoutdiv}>
                             <input
                                 type="text"
                                 id="name"
                                 name="name"
+                                className={styles.emailidinput}
                                 placeholder="Enter your name"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
@@ -72,12 +71,13 @@ const Signup: React.FC = () => {
                             />
                         </div>
 
-                        <label className={styles.textSignup} htmlFor="email">Email-ID</label>
-                        <div className={styles.emailIdInput}>
+                        <label className={styles.textsignin} htmlFor="email">Email-ID</label>
+                        <div className={styles.inputoutdiv}>
                             <input
                                 type="email"
                                 id="email"
                                 name="email"
+                                className={styles.emailidinput}
                                 placeholder="Enter your email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
@@ -85,23 +85,24 @@ const Signup: React.FC = () => {
                             />
                         </div>
 
-                        <label className={styles.textSignup} htmlFor="password">Password</label>
-                        <div className={styles.passwordInput}>
+                        <label className={styles.textsignin} htmlFor="password">Password</label>
+                        <div className={styles.inputoutdiv}>
                             <input
                                 type="password"
                                 id="password"
                                 name="password"
+                                className={styles.passwordinput}
                                 placeholder="Enter your password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
                             />
                         </div>
-                        <p className={styles.createAccount}>
-                            Already have an account? <a href="/signin">Sign In</a>
+                        <p className={styles.createaccount}>
+                            Already have an account? <a href="/signin" className={styles.signuproute}>Sign In</a>
                         </p>
                         <button
-                            className={`${styles.textSignup} ${styles.buttonText}`}
+                            className={styles.buttontext}
                             type="submit"
                             disabled={loading}
                         >

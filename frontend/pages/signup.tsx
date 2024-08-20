@@ -3,7 +3,7 @@ import Signup from '../components/signup'; // Adjust the path as necessary
 import MainPage from '../components/main-page';
 const SignupPage = () => {
   return (
-    <div>
+    <div style={{ display: 'flex' }}>
     <MainPage/>
       <Signup />
     </div>

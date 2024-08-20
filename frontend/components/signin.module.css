@@ -1,0 +1,60 @@
+.signin{
+    height: 100vh;
+    width: 50vw;
+}
+.signincont{
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 15vh;
+}
+.signinside{
+    height: 70vh;
+    border: 3px solid;
+    border-radius: 10px;
+}
+.headsignin{
+    text-align: center;
+    font-size: 36px;
+    margin-top: 5vh;
+    margin-bottom: 4vh;
+}
+.textsignin{
+    font-size: 20px;
+    margin-left: 3vw;
+}
+.emailidinput{
+    margin-left: 3vw;
+    height: 36px;
+    background: white;
+    width: 32vw;
+    color: black;
+    font-size: 20px;
+    border-radius: 10px;
+}
+.passwordinput{
+    margin-left: 3vw;
+    height: 36px;
+    background: white;
+    width: 32vw;
+    color: black;
+    font-size: 20px;
+    border-radius: 10px;
+}
+.inputoutdiv{
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+}
+.createaccount{
+    margin-left: 3vw;
+}
+.buttontext{
+    margin-top: 5vh;
+    border: 5px solid white;
+    width: 15vw;
+    text-align: center;
+    height: 54px;    margin-left: 12vw;
+    font-size: 30px;
+}
+.signuproute{
+    color: blue;
+}
