@@ -1,69 +1,70 @@
 .signinside {
-    height: 75vh;
-    margin: 10%;
-    border: 3px solid white;
+  height: 80vh;
+  margin-top: 9vh;
+  margin-right: 5vw;
+  margin-left: 1vw;
+  /* margin: 10%; */
+  margin-bottom: 10vh;
+  border: 3px solid white;
 }
-
 .signincont {
-    width: 50vw;
+  width: 50vw;
 }
-
-.text-main {
-    text-align: center;
-    font-size: 32px;
+.welcomename {
+  font-size: 24px;
+  margin-top: 2vh;
+  margin-left: 3vw;
+  color: green;
+  margin-bottom: 2vh;
+  text-align: start;
 }
-
-.table-main {
-    border: 1px solid white;
-    height: 45vh;
-    width: 35vw;
-    margin-left: 5%;
+.textMain {
+  font-size: 24px;
+  margin-left: 3vw;
+  text-align: start;
+  margin-bottom: 3vh;
 }
-
-.table-header {
-    background-color: black;
-    height: 10%;
+.tableMain {
+  width: 38vw;
+  text-align: start;
+  margin-left: 3vw;
+  height: 50vh;
+  border: 1px solid white;
 }
-
-.add-stock {
-    display: flex;
-    margin-left: 5%;
-    border: 1px solid white;
-    width: 35vw;
+.headertable {
+  background-color: black;
+  height: 5vh;
+  border: 1px solid white;
 }
+.addStock {
+  width: 38vw;
+  text-align: start;
+  margin-left: 3vw;
+  height: 50vh;
+  border: 1px solid white;
 
-.addstockbtn {
-    margin-left: 5%;
-    width: 8em;
-    height: 2em;
-    margin-top: 1em;
-    background-color: #0F1D24;
-    color: white;
-    font-family: 'Kanit', sans-serif;
-    border: 1px solid white;
-    border-radius: 10px;
+  height: 6vh;
 }
-
-.total-value {
-    flex: 1;
+.stockbuttom {
+  border: 1px solid white;
+  border-radius: 5px;
+  width: 10vw;
+  height: 3vh;
+  margin-top: 1.5vh;
+  margin-left: 1em;
+  text-align: center;
+  font-size: 18px;
 }
-
-.add-stock-button {
-    flex: 1.5;
+.addconfirmButton {
+  text-align: center;
 }
-
-.Confirm-stock-button {
-    margin-top: 2em;
-    text-align: center;
-}
-
-.Confirmstockbtn {
-    width: 8em;
-    height: 2em;
-    background-color: #0F1D24;
-    color: white;
-    font-family: 'Kanit', sans-serif;
-    border: 1px solid white;
-    border-radius: 10px;
-    font-size: 25px;
+.confirmbuttom {
+  border: 1px solid white;
+  border-radius: 5px;
+  width: 10vw;
+  height: 3vh;
+  margin-top: 3.5vh;
+  margin-left: 1em;
+  text-align: center;
+  font-size: 18px;
 }

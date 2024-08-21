@@ -1,43 +1,27 @@
 import React, { useState } from 'react';
-import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from './firebaseconfig'; // Adjust the path as needed
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'next/router';
-import styles from './signin.module.css'; // Import the CSS Module
-const firebaseConfig = {
-    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-    measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
-};
+import styles from './signin.module.css';
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-const SignIn = () => {
+const Signin: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const router = useRouter();
 
-    const handleSignIn = async (e: { preventDefault: () => void; }) => {
+    const handleSignin = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         setError('');
 
         try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
-            console.log('User:', user);
+            await signInWithEmailAndPassword(auth, email, password);
             setLoading(false);
             router.push('/dashboard'); // Redirect to dashboard after successful sign-in
-        } catch (error) {
-            setError((error as Error).message);
-            console.error('Error:', error);
-        } finally {
+        } catch (err) {
+            setError('Failed to sign in. Please check your credentials.');
             setLoading(false);
         }
     };
@@ -47,14 +31,14 @@ const SignIn = () => {
             <div className={styles.signincont}>
                 <div className={styles.signinside}>
                     <p className={styles.headsignin}>Sign In</p>
-                    <form onSubmit={handleSignIn} className={styles.inputfields}>
+                    <form onSubmit={handleSignin} className={styles.inputfields}>
                         <label className={styles.textsignin} htmlFor="email">Email-ID</label>
                         <div className={styles.inputoutdiv}>
                             <input
                                 type="email"
                                 id="email"
-                                className={styles.emailidinput}
                                 name="email"
+                                className={styles.emailidinput}
                                 placeholder="Enter your email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
@@ -93,4 +77,4 @@ const SignIn = () => {
     );
 };
 
-export default SignIn;
+export default Signin;
