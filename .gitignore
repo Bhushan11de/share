@@ -4,3 +4,4 @@ backend/src/firebase-adminsdk.json
 .env.local
 frontend/.env.local
 frontend_main
+.env

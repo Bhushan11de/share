@@ -1,0 +1,39 @@
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popupContent {
+  padding: 20px;
+  border-radius: 5px;
+  width: 300px;
+  text-align: center;
+}
+
+.popupContent h2 {
+  margin-bottom: 20px;
+}
+
+.popupContent label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.popupContent select,
+.popupContent input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.popupContent button {
+  margin: 5px;
+  padding: 10px 20px;
+}
