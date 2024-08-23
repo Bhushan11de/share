@@ -14,6 +14,8 @@ const AddStockPopup: React.FC<AddStockPopupProps> = ({ onClose, onAddStock, emai
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStock, setSelectedStock] = useState<any>(null);
   const [quantity, setQuantity] = useState(0);
+  const [currentPrice, setCurrentPrice] = useState<number | null>(null);
+  const [totalValue, setTotalValue] = useState<number | null>(null);
 
   useEffect(() => {
     if (searchTerm) {
@@ -34,33 +36,51 @@ const AddStockPopup: React.FC<AddStockPopupProps> = ({ onClose, onAddStock, emai
     }
   }, [searchTerm]);
 
-  const handleAddStock = async () => {
-    if (selectedStock && quantity > 0) {
+  useEffect(() => {
+    if (selectedStock) {
       // Fetch current value of the selected stock
       const fetchCurrentValue = async () => {
         try {
           const response = await fetch(`http://localhost:3001/api/stock?symbol=${selectedStock.symbol}`);
-          const data = await response.json();
-          const stockData = {
-            name: selectedStock.name,
-            symbol: selectedStock.symbol,
-            quantity,
-            price: data.price,
-            totalValue: quantity * data.price,
-            email,
-          };
-
-          // Store stock data in Firebase
-          await addDoc(collection(db, 'userStocks'), stockData);
-
-          onAddStock(stockData);
-          onClose();
+          const contentType = response.headers.get("content-type");
+          if (contentType && contentType.indexOf("application/json") !== -1) {
+            const data = await response.json();
+            setCurrentPrice(data.price);
+            setTotalValue(quantity * data.price);
+          } else {
+            console.error("Expected JSON response but got:", contentType);
+            const text = await response.text();
+            console.error("Response text:", text);
+          }
         } catch (error) {
           console.error('Error fetching current stock value:', error);
         }
       };
 
       fetchCurrentValue();
+    }
+  }, [selectedStock, quantity]);
+
+  const handleAddStock = async () => {
+    if (selectedStock && quantity > 0) {
+      const stockData = {
+        name: selectedStock.name,
+        symbol: selectedStock.symbol,
+        quantity,
+        price: currentPrice,
+        totalValue,
+        email,
+      };
+
+      try {
+        // Store stock data in Firebase
+        await addDoc(collection(db, 'userStocks'), stockData);
+
+        onAddStock(stockData);
+        onClose();
+      } catch (error) {
+        console.error('Error adding stock to Firestore:', error);
+      }
     }
   };
 
@@ -71,6 +91,7 @@ const AddStockPopup: React.FC<AddStockPopupProps> = ({ onClose, onAddStock, emai
         <label>
           Search Stock:
           <input
+            className={styles.inputfield}
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -79,9 +100,9 @@ const AddStockPopup: React.FC<AddStockPopupProps> = ({ onClose, onAddStock, emai
         </label>
         {stocks.length > 0 && (
           <ul className={styles.stockList}>
-            {stocks.map((stock: any) => (
+            {stocks.map((stock: any, index: number) => (
               <li
-                key={stock.symbol}
+                key={`${stock.symbol}-${index}`}
                 onClick={() => setSelectedStock(stock)}
                 className={selectedStock?.symbol === stock.symbol ? styles.selected : ''}
               >
@@ -93,16 +114,18 @@ const AddStockPopup: React.FC<AddStockPopupProps> = ({ onClose, onAddStock, emai
         {selectedStock && (
           <div className={styles.stockDetails}>
             <p>Selected Stock: {selectedStock.name} ({selectedStock.symbol})</p>
+            <p>Current Price: ${typeof currentPrice === 'number' ? currentPrice.toFixed(2) : 'Loading...'}</p>
+            <label>
+              Quantity:
+              <input
+                type="number"
+                value={quantity}
+                onChange={(e) => setQuantity(Number(e.target.value))}
+              />
+            </label>
+            <p>Total Value: ${typeof totalValue === 'number' ? totalValue.toFixed(2) : 'Loading...'}</p>
           </div>
         )}
-        <label>
-          Quantity:
-          <input
-            type="number"
-            value={quantity}
-            onChange={(e) => setQuantity(Number(e.target.value))}
-          />
-        </label>
         <button onClick={handleAddStock}>Add</button>
         <button onClick={onClose}>Cancel</button>
       </div>

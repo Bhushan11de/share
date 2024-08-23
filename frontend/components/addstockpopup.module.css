@@ -11,10 +11,9 @@
 }
 
 .popupContent {
-  padding: 20px;
-  border-radius: 5px;
-  width: 300px;
-  text-align: center;
+  padding: 3em;
+  border-radius: 10px;
+  width: 30vw;
 }
 
 .popupContent h2 {
@@ -31,6 +30,9 @@
   width: 100%;
   padding: 8px;
   margin-bottom: 10px;
+  background: none;
+  border: 2px solid;
+  margin-top: 1vh;
 }
 
 .popupContent button {
