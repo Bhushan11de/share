@@ -18,6 +18,8 @@ const AddStockPopup: React.FC<AddStockPopupProps> = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStock, setSelectedStock] = useState<any>(null);
   const [quantity, setQuantity] = useState(0);
+  const [price, setPrice] = useState<number | null>(null);
+  const [totalValue, setTotalValue] = useState<number | null>(null);
 
   useEffect(() => {
     if (searchTerm) {
@@ -40,6 +42,26 @@ const AddStockPopup: React.FC<AddStockPopupProps> = ({
     }
   }, [searchTerm]);
 
+  useEffect(() => {
+    if (selectedStock) {
+      // Fetch the current price of the selected stock
+      const fetchStockPrice = async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:3001/api/stock?symbol=${selectedStock.symbol}`
+          );
+          const data = await response.json();
+          setPrice(data.price);
+          setTotalValue(quantity * data.price);
+        } catch (error) {
+          console.error("Error fetching stock price:", error);
+        }
+      };
+
+      fetchStockPrice();
+    }
+  }, [selectedStock, quantity]);
+
   const handleAddStock = async () => {
     if (selectedStock && quantity > 0 && email) {
       try {
@@ -47,6 +69,8 @@ const AddStockPopup: React.FC<AddStockPopupProps> = ({
           name: selectedStock.name,
           symbol: selectedStock.symbol,
           quantity,
+          price,
+          totalValue,
         };
 
         // Store stock data in Firebase under userstocks/{email}/stocks/{stock symbol}
@@ -105,6 +129,13 @@ const AddStockPopup: React.FC<AddStockPopupProps> = ({
                 onChange={(e) => setQuantity(Number(e.target.value))}
               />
             </label>
+            <p>
+              Current Price: {price !== null ? price.toFixed(2) : "Loading..."}
+            </p>
+            <p>
+              Total Value:{" "}
+              {totalValue !== null ? totalValue.toFixed(2) : "Loading..."}
+            </p>
           </div>
         )}
         <button onClick={handleAddStock}>Add</button>

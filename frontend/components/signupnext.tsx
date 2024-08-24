@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/router";
 import { auth, db } from "./firebaseconfig"; // Adjust the path as needed
 import { doc, getDoc, collection, getDocs } from "firebase/firestore";
@@ -13,6 +13,7 @@ const SignupNext: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage] = useState(5); // Number of rows per page
   const router = useRouter();
+  const stocksRef = useRef(stocks);
 
   useEffect(() => {
     const fetchUserName = async () => {
@@ -35,6 +36,7 @@ const SignupNext: React.FC = () => {
         );
         const userStocks = userStocksSnapshot.docs.map((doc) => doc.data());
         setStocks(userStocks);
+        stocksRef.current = userStocks;
       }
     };
 
@@ -45,7 +47,7 @@ const SignupNext: React.FC = () => {
   useEffect(() => {
     const fetchStockPrices = async () => {
       const updatedStocks = await Promise.all(
-        stocks.map(async (stock) => {
+        stocksRef.current.map(async (stock) => {
           try {
             const response = await fetch(
               `http://localhost:3001/api/stock?symbol=${stock.symbol}`
@@ -65,9 +67,16 @@ const SignupNext: React.FC = () => {
       setStocks(updatedStocks);
     };
 
-    if (stocks.length > 0) {
+    if (stocksRef.current.length > 0) {
       fetchStockPrices();
+      const intervalId = setInterval(fetchStockPrices, 10000); // Fetch every 30 seconds
+
+      return () => clearInterval(intervalId); // Cleanup interval on component unmount
     }
+  }, []);
+
+  useEffect(() => {
+    stocksRef.current = stocks;
   }, [stocks]);
 
   const openAddStockPopup = () => {
