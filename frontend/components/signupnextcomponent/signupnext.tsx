@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/router";
-import { auth, db } from "./firebaseconfig"; // Adjust the path as needed
+import { auth, db } from "../firebaseconfig"; // Adjust the path as needed
 import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import AddStockPopup from "./AddStockPopup";
 import styles from "./signupnext.module.css";

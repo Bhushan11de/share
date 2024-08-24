@@ -1,10 +1,10 @@
-import React from 'react';
-import SignupNext from '../components/signupnext';
-import MainPage from '../components/main-page';
+import React from "react";
+import SignupNext from "../components/signupnextcomponent/signupnext";
+import MainPage from "../components/mainpagecomponent/main-page";
 const SignupPage = () => {
   return (
-    <div style={{ display: 'flex' }}>
-    <MainPage/>
+    <div style={{ display: "flex" }}>
+      <MainPage />
       <SignupNext />
     </div>
   );

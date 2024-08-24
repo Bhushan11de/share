@@ -1,10 +1,10 @@
-import React from 'react';
-import Signin from '../components/signin'; // Adjust the path as necessary
-import MainPage from '../components/main-page';
+import React from "react";
+import Signin from "../components/signincomponent/signin"; // Adjust the path as necessary
+import MainPage from "../components/mainpagecomponent/main-page";
 const SigninPage = () => {
   return (
-    <div style={{ display: 'flex' }}>
-      <MainPage/>
+    <div style={{ display: "flex" }}>
+      <MainPage />
       <Signin />
     </div>
   );
