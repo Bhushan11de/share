@@ -3,13 +3,16 @@
   margin-top: 9vh;
   margin-right: 5vw;
   margin-left: 1vw;
-  /* margin: 10%; */
   margin-bottom: 10vh;
   border: 3px solid white;
+  display: flex;
+  flex-direction: column;
 }
+
 .signincont {
   width: 50vw;
 }
+
 .welcomename {
   font-size: 24px;
   margin-top: 2vh;
@@ -18,33 +21,59 @@
   margin-bottom: 2vh;
   text-align: start;
 }
+
 .textMain {
   font-size: 24px;
   margin-left: 3vw;
   text-align: start;
   margin-bottom: 3vh;
 }
+
 .tableMain {
   width: 38vw;
   text-align: start;
   margin-left: 3vw;
   height: 50vh;
   border: 1px solid white;
+  border-collapse: collapse;
+  overflow-y: auto;
+  display: block;
 }
-.headertable {
-  background-color: black;
-  height: 5vh;
+
+.tableMain table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableMain th,
+.tableMain td {
   border: 1px solid white;
+  padding: 8px;
+  text-align: left;
 }
+
+.tableMain th {
+  background-color: black;
+  color: white;
+  height: 5vh;
+}
+
+.tableMain tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.tableMain tr:hover {
+  background-color: #ddd;
+}
+
 .addStock {
   width: 38vw;
   text-align: start;
   margin-left: 3vw;
-  height: 50vh;
-  border: 1px solid white;
-
   height: 6vh;
+  border: 1px solid white;
 }
+
 .stockbuttom {
   border: 1px solid white;
   border-radius: 5px;
@@ -55,9 +84,11 @@
   text-align: center;
   font-size: 18px;
 }
+
 .addconfirmButton {
   text-align: center;
 }
+
 .confirmbuttom {
   border: 1px solid white;
   border-radius: 5px;
@@ -67,4 +98,33 @@
   margin-left: 1em;
   text-align: center;
   font-size: 18px;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1em;
+}
+
+.pagination button {
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 0.5em 1em;
+  margin: 0 0.5em;
+  background-color: black;
+  color: white;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  background-color: grey;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  margin: 0 1em;
+  color: white;
+}
+.table {
+  height: 42vh;
 }

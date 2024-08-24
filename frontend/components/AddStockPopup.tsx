@@ -1,32 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import { db } from './firebaseconfig'; // Adjust the path as needed
-import { collection, addDoc } from 'firebase/firestore';
-import styles from './addstockpopup.module.css';
+import React, { useState, useEffect } from "react";
+import { db } from "./firebaseconfig"; // Adjust the path as needed
+import { doc, setDoc } from "firebase/firestore";
+import styles from "./addstockpopup.module.css";
 
 interface AddStockPopupProps {
   onClose: () => void;
   onAddStock: (stock: any) => void;
-  email: string;
+  email: string | null;
 }
 
-const AddStockPopup: React.FC<AddStockPopupProps> = ({ onClose, onAddStock, email }) => {
+const AddStockPopup: React.FC<AddStockPopupProps> = ({
+  onClose,
+  onAddStock,
+  email,
+}) => {
   const [stocks, setStocks] = useState<any[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedStock, setSelectedStock] = useState<any>(null);
   const [quantity, setQuantity] = useState(0);
-  const [currentPrice, setCurrentPrice] = useState<number | null>(null);
-  const [totalValue, setTotalValue] = useState<number | null>(null);
 
   useEffect(() => {
     if (searchTerm) {
       // Fetch stock names and prices from the Express API
       const fetchStocks = async () => {
         try {
-          const response = await fetch(`http://localhost:3001/api/search?q=${searchTerm}`);
+          const response = await fetch(
+            `http://localhost:3001/api/search?q=${searchTerm}`
+          );
           const data = await response.json();
           setStocks(data);
         } catch (error) {
-          console.error('Error fetching stock data:', error);
+          console.error("Error fetching stock data:", error);
         }
       };
 
@@ -36,50 +40,25 @@ const AddStockPopup: React.FC<AddStockPopupProps> = ({ onClose, onAddStock, emai
     }
   }, [searchTerm]);
 
-  useEffect(() => {
-    if (selectedStock) {
-      // Fetch current value of the selected stock
-      const fetchCurrentValue = async () => {
-        try {
-          const response = await fetch(`http://localhost:3001/api/stock?symbol=${selectedStock.symbol}`);
-          const contentType = response.headers.get("content-type");
-          if (contentType && contentType.indexOf("application/json") !== -1) {
-            const data = await response.json();
-            setCurrentPrice(data.price);
-            setTotalValue(quantity * data.price);
-          } else {
-            console.error("Expected JSON response but got:", contentType);
-            const text = await response.text();
-            console.error("Response text:", text);
-          }
-        } catch (error) {
-          console.error('Error fetching current stock value:', error);
-        }
-      };
-
-      fetchCurrentValue();
-    }
-  }, [selectedStock, quantity]);
-
   const handleAddStock = async () => {
-    if (selectedStock && quantity > 0) {
-      const stockData = {
-        name: selectedStock.name,
-        symbol: selectedStock.symbol,
-        quantity,
-        price: currentPrice,
-        totalValue,
-        email,
-      };
-
+    if (selectedStock && quantity > 0 && email) {
       try {
-        // Store stock data in Firebase
-        await addDoc(collection(db, 'userStocks'), stockData);
+        const stockData = {
+          name: selectedStock.name,
+          symbol: selectedStock.symbol,
+          quantity,
+        };
+
+        // Store stock data in Firebase under userstocks/{email}/stocks/{stock symbol}
+        await setDoc(
+          doc(db, `userstocks/${email}/stocks`, selectedStock.symbol),
+          stockData
+        );
 
         onAddStock(stockData);
         onClose();
       } catch (error) {
-        console.error('Error adding stock to Firestore:', error);
+        console.error("Error adding stock to Firestore:", error);
       }
     }
   };
@@ -98,13 +77,15 @@ const AddStockPopup: React.FC<AddStockPopupProps> = ({ onClose, onAddStock, emai
             placeholder="Search for a stock"
           />
         </label>
-        {stocks.length > 0 && (
+        {!selectedStock && stocks.length > 0 && (
           <ul className={styles.stockList}>
             {stocks.map((stock: any, index: number) => (
               <li
                 key={`${stock.symbol}-${index}`}
                 onClick={() => setSelectedStock(stock)}
-                className={selectedStock?.symbol === stock.symbol ? styles.selected : ''}
+                className={
+                  selectedStock?.symbol === stock.symbol ? styles.selected : ""
+                }
               >
                 {stock.name} ({stock.symbol})
               </li>
@@ -113,8 +94,9 @@ const AddStockPopup: React.FC<AddStockPopupProps> = ({ onClose, onAddStock, emai
         )}
         {selectedStock && (
           <div className={styles.stockDetails}>
-            <p>Selected Stock: {selectedStock.name} ({selectedStock.symbol})</p>
-            <p>Current Price: ${typeof currentPrice === 'number' ? currentPrice.toFixed(2) : 'Loading...'}</p>
+            <p>
+              Selected Stock: {selectedStock.name} ({selectedStock.symbol})
+            </p>
             <label>
               Quantity:
               <input
@@ -123,7 +105,6 @@ const AddStockPopup: React.FC<AddStockPopupProps> = ({ onClose, onAddStock, emai
                 onChange={(e) => setQuantity(Number(e.target.value))}
               />
             </label>
-            <p>Total Value: ${typeof totalValue === 'number' ? totalValue.toFixed(2) : 'Loading...'}</p>
           </div>
         )}
         <button onClick={handleAddStock}>Add</button>
