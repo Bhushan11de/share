@@ -1,0 +1,50 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 100px;
+  box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid #ffffff; /* Add this line for the bottom border */
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+}
+
+.logoImage {
+  height: 60px;
+  margin-right: 20px;
+}
+
+.companyInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.companyName {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.tagline {
+  margin: 0;
+  font-size: 14px;
+  color: #6c757d;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+}
+
+.logoImage2 {
+  height: 30px;
+  margin-right: 20px;
+}
+.logoImage3 {
+  height: 50px;
+  margin-right: 20px;
+}

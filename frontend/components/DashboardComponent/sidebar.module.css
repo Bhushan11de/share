@@ -1,0 +1,38 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 10vw;
+  height: 100vh;
+  padding-top: 20px;
+  padding-right: 10px;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+  border-right: 1px solid white;
+}
+
+.menuItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.menuItem:hover {
+  transform: scale(1.05);
+}
+
+.active {
+  transform: scale(1.1);
+}
+
+.icon {
+  height: 30px;
+  margin-bottom: 5px; /* Adjust margin to space the icon and text */
+}
+
+.menuText {
+  font-size: 18px;
+  font-weight: bold;
+}
