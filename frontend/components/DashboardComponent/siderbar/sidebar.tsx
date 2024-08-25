@@ -1,10 +1,10 @@
 import React from "react";
 import styles from "./sidebar.module.css";
-import logoImage1 from "./image 4.png";
-import logoImage2 from "./image 5.png";
-import logoImage3 from "./image 6.png";
-import logoImage4 from "./image 7.png";
-import logoImage5 from "./image 8.png";
+import logoImage1 from "../assets/image 4.png";
+import logoImage2 from "../assets/image 5.png";
+import logoImage3 from "../assets/image 6.png";
+import logoImage4 from "../assets/image 7.png";
+import logoImage5 from "../assets/image 8.png";
 
 const Sidebar: React.FC = () => {
   return (

@@ -1,6 +1,6 @@
 import React from "react";
-import Header from "../components/DashboardComponent/header";
-import Sidebar from "../components/DashboardComponent/sidebar";
+import Header from "../components/DashboardComponent/header/header";
+import Sidebar from "../components/DashboardComponent/siderbar/sidebar";
 const DashboardPage = () => {
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>

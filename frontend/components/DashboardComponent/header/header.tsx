@@ -1,8 +1,8 @@
 import React from "react";
 import styles from "./header.module.css";
-import logoImage from "./image 3.png";
-import notiimage from "./icon_bell.png";
-import profileimage from "./profile.png";
+import logoImage from "../assets/image 3.png";
+import notiimage from "../assets/icon_bell.png";
+import profileimage from "../assets/profile.png";
 const Header: React.FC = () => {
   return (
     <header className={styles.header}>
