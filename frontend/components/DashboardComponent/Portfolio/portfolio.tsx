@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../../firebaseconfig"; // Adjust the path as necessary
-import { collection, getDocs } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -35,14 +36,20 @@ const Portfolio: React.FC = () => {
   const [userName, setUserName] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchUserName = async () => {
-      const querySnapshot = await getDocs(collection(db, "users"));
-      querySnapshot.forEach((doc) => {
-        // Assuming there's only one user document
-        setUserName(doc.data().name);
-      });
-    };
-    fetchUserName();
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const uid = user.uid;
+        const userDoc = await getDoc(doc(db, "users", uid));
+        if (userDoc.exists()) {
+          setUserName(userDoc.data().name);
+        } else {
+          console.log("No such document!");
+        }
+      } else {
+        console.log("User is not signed in");
+      }
+    });
   }, []);
 
   const pieData = {

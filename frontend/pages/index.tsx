@@ -1,19 +1,12 @@
-import React from 'react';
-import Link from 'next/link';
+import React from "react";
+import useAuthRedirect from "../hooks/useAuthRedirect";
 
-const Home = () => {
+const Home: React.FC = () => {
+  useAuthRedirect();
+
   return (
     <div>
-      <h1>Welcome to the Stock Market App</h1>
-      <Link href="/signup">
-        <button>Go to Signup</button>
-      </Link>
-      <Link href="/signin">
-        <button>Go to Signin</button>
-      </Link>
-      <Link href="/signupnext">
-        <button>Go to Signup Next</button>
-      </Link>
+      <p>Loading...</p>
     </div>
   );
 };
