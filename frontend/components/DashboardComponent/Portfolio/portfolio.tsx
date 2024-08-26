@@ -67,31 +67,58 @@ const Portfolio: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.headerLeft}>
         <div className={styles.companyInfo}>
-          Welcome {userName ? userName : "Loading..."}
+          Welcome {userName ? userName + "," : "Loading..."}
         </div>
       </div>
       <div className={styles.content}>
-        <div className={styles.leftContainer}>
-          <div className={styles.section}>
-            <h3>Total Asset Value</h3>
-            <p>$100,000</p>
+        <div className={styles.letcontainer}>
+          <div className={styles.cont1}>
+            <div className={styles.cont1div1}>
+              <p className={styles.cont1div1para}>Total Asset Value</p>
+              <div className={styles.cont1div1div1}>
+                <p className={styles.cont1div3para}>Rs 40.21 Lakh</p>{" "}
+              </div>
+            </div>
+            <div className={styles.cont1div2}>
+              <p className={styles.cont1div2para}>Gain vs Yesterday</p>
+              <div className={styles.cont1div2div1}>
+                <p className={styles.cont1div4para}>+2.34% </p>
+              </div>
+            </div>
           </div>
-          <div className={styles.section}>
-            <h3>Gain vs Yesterday</h3>
-            <p>+2%</p>
-          </div>
-          <div className={styles.section}>
-            <h3>Top Gainer/Loser</h3>
-            <p>Gainer: Stock A +5%</p>
-            <p>Loser: Stock B -3%</p>
+          <div className={styles.cont2}>
+            <p className={styles.cont2para}>Top Gainer/Looser</p>
+            <div className={styles.cont2div1}>
+              <div className={styles.cont2div1div1}>
+                <div className={styles.cont2div1para}>
+                  <p className={styles.cont2div1para1}>Gainers</p>
+                </div>
+                <div className={styles.gainercont}></div>
+              </div>
+              <div className={styles.cont2div1div2}>
+                <div className={styles.cont2div2para}>
+                  <p className={styles.cont2div2para1}>Looser</p>
+                </div>
+                <div className={styles.loosercont}></div>
+              </div>
+            </div>
           </div>
         </div>
-        <div className={styles.rightContainer}>
-          <Pie data={pieData} />
-          <button className={styles.button}>Open Full Details</button>
-          <button className={styles.button}>Add New Stock</button>
-          <button className={styles.button}>Sell Stock</button>
+        <div className={styles.rightcontainer}>
+          <div className={styles.rightcontainerparadiv1}>
+            <p className={styles.rightcontainerdiv1para}>Assets Distribution</p>
+          </div>
+          <div className={styles.piechart}>
+            <Pie data={pieData} />
+          </div>
+          <div className={styles.buttondiv1}>
+            <button className={styles.button3}>Open Full Details</button>
+          </div>
         </div>
+      </div>
+      <div className={styles.buttondiv}>
+        <button className={styles.button1}>Add new stock</button>
+        <button className={styles.button2}>Sell stock</button>
       </div>
     </div>
   );

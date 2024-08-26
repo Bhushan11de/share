@@ -1,17 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Kanit&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Kanit&display=swap");
 
 ::ng-deep body {
-    margin: 0 !important;
+  margin: 0 !important;
 }
 
 .app {
-    display: flex;
+  display: flex;
 }
 
 * {
-    font-family: 'Kanit', sans-serif;
-    background-color: #0F1D24;
-    color: white;
-    margin: 0;
-    padding: 0;
+  font-family: "Kanit", sans-serif;
+  background-color: #0f1d24;
+  color: white;
+  margin: 0;
+  padding: 0;
 }
