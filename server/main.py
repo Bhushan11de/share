@@ -10,8 +10,10 @@ from stable_baselines3 import PPO
 from stable_baselines3.common.vec_env import DummyVecEnv
 from gym import Env
 from gym.spaces import Discrete, Box
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS
 
 @app.route('/forecast', methods=['POST'])
 def forecast():
@@ -92,7 +94,6 @@ def forecast():
     }
     
     return jsonify(forecast_data)
-
 # --- Reinforcement Learning Route for Stock Recommendations --- 
 class StockTradingEnv(Env):
     def __init__(self, stock_data, portfolio):
@@ -163,14 +164,16 @@ def recommend_stocks():
         obs, rewards, dones, info = env.step(action)
         
         action_label = "sell" if action[0] == 1 else "hold"
-        recommendations.append({"day": day + 1, "action": action_label})
-
+        recommendation = {"day": day + 1, "action": action_label}
+        
         if action_label == "sell":
             # Optionally decide how much to sell
             # For example, sell 20% of the current holdings
             for stock in portfolio:
                 quantity_to_sell = portfolio[stock] * 0.2  # Adjust percentage as needed
-                recommendations[-1].update({"stock": stock, "quantity": quantity_to_sell})
+                recommendation.update({"stock": stock, "quantity": quantity_to_sell})
+        
+        recommendations.append(recommendation)
     
     return jsonify(recommendations)
 

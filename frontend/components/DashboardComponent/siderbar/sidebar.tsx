@@ -31,7 +31,7 @@ const Sidebar: React.FC = () => {
       </div>
       <div
         className={styles.menuItem}
-        onClick={() => handleNavigation("/dashboard")}
+        onClick={() => handleNavigation("/recommend")}
       >
         <img className={styles.logoImage} src={logoImage3.src} alt="Logo" />
         <span className={styles.menuText}>Recommend</span>
