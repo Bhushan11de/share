@@ -1,0 +1,16 @@
+{
+  "name": "stock-market-app",
+  "version": "1.0.0",
+  "description": "Building using next, Express and Firebase",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cd frontend && npm run dev",
+    "server": "cd backend && npm run start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "yahoo-finance2": "^2.13.2"
+  }
+}

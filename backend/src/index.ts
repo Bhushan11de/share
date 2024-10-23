@@ -1,6 +1,6 @@
 import cors from "cors";
 import express from "express";
-import axios from "axios";
+import yahooFinance from "yahoo-finance2";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -17,48 +17,62 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-// Finnhub API key
-const FINNHUB_API_KEY = process.env.FINNHUB_API_KEY;
-console.log("Finnhub API Key:", FINNHUB_API_KEY);
+// Suppress survey notice
+yahooFinance.suppressNotices(["yahooSurvey"]);
 
 // Search stocks by name
 router.get("/search", async (req, res) => {
   const query = req.query.q as string;
+  console.log("Received search query:", query); // Log the search query
   if (!query) {
     return res.status(400).json({ error: "Query parameter 'q' is required" });
   }
 
-  if (!FINNHUB_API_KEY) {
-    return res.status(500).json({ error: "Finnhub API key is missing" });
-  }
-
   try {
-    console.log("Making request to Finnhub API with key:", FINNHUB_API_KEY);
-    const response = await axios.get(`https://finnhub.io/api/v1/search`, {
-      params: {
-        q: query,
-      },
-      headers: {
-        "X-Finnhub-Token": FINNHUB_API_KEY,
-      },
-    });
-    console.log("Response from Finnhub API:", response.data);
+    // Fetch stock symbols based on the query
+    const searchResults = await yahooFinance.search(query);
+    console.log("Search Results:", searchResults); // Log the search results
+    const symbols = searchResults.quotes
+      .map((stock: any) => stock.symbol)
+      .filter(
+        (symbol: string | undefined): symbol is string => symbol !== undefined
+      );
+    console.log("Filtered Symbols:", symbols); // Log the filtered symbols
 
-    // Format and limit the response data to 10 entries
-    const formattedData = response.data.result
-      .slice(0, 10)
-      .map((item: any) => ({
-        name: item.description,
-        symbol: item.symbol,
-      }));
-
-    res.json(formattedData);
-  } catch (error) {
-    console.error(
-      "Error fetching data from Finnhub API:",
-      (error as any).response?.data || (error as any).message
+    // Fetch stock prices for each symbol
+    const pricePromises = symbols.map((symbol: string) =>
+      yahooFinance.quote(symbol).catch((error) => {
+        console.error(`Error fetching quote for symbol ${symbol}:`, error);
+        return null;
+      })
     );
-    res.status(500).json({ error: "Error fetching data from Finnhub API" });
+    const priceResponses = await Promise.all(pricePromises);
+
+    // Filter out stocks without a price
+    const stocksWithPrice = priceResponses
+      .filter((response) => response !== null)
+      .map((response, index) => ({
+        symbol: symbols[index],
+        price: response?.regularMarketPrice,
+      }))
+      .filter((stock) => stock.price !== null && stock.price !== undefined);
+
+    // Include Indian stocks and other relevant stocks
+    const indianStocks = stocksWithPrice.filter((stock) =>
+      stock.symbol.endsWith(".NS")
+    );
+
+    // Limit the results to 5 stocks
+    const limitedStocks = stocksWithPrice.slice(0, 5);
+
+    // Extract only the symbols
+    const symbolsOnly = limitedStocks.map((stock) => stock.symbol);
+    console.log("Final Symbols to Return:", symbolsOnly); // Log the final symbols
+
+    res.json(symbolsOnly);
+  } catch (error) {
+    console.error("Error fetching stock data:", error);
+    res.status(500).json({ error: "Error fetching stock data" });
   }
 });
 
@@ -71,31 +85,11 @@ router.get("/stock", async (req, res) => {
       .json({ error: "Query parameter 'symbol' is required" });
   }
 
-  if (!FINNHUB_API_KEY) {
-    return res.status(500).json({ error: "Finnhub API key is missing" });
-  }
-
   try {
-    console.log("Making request to Finnhub API with key:", FINNHUB_API_KEY);
-    const response = await axios.get(`https://finnhub.io/api/v1/quote`, {
-      params: {
-        symbol: symbol,
-      },
-      headers: {
-        "X-Finnhub-Token": FINNHUB_API_KEY,
-      },
-    });
-    console.log("Response from Finnhub API:", response.data);
-
-    // Extract the current price from the response
-    const currentPrice = response.data.c;
-
-    res.json({ symbol, price: currentPrice });
+    const response = await yahooFinance.quote(symbol);
+    res.json(response);
   } catch (error) {
-    console.error(
-      "Error fetching data from Finnhub API:",
-      (error as any).response?.data || (error as any).message
-    );
-    res.status(500).json({ error: "Error fetching data from Finnhub API" });
+    console.error("Error fetching stock data:", error);
+    res.status(500).json({ error: "Error fetching stock data" });
   }
 });

@@ -1,43 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { db } from "../../firebaseconfig"; // Adjust the path as necessary
-import { doc, getDoc } from "firebase/firestore";
+import React, { useState, useEffect } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { Pie } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-  Title,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  RadialLinearScale,
-} from "chart.js";
-import styles from "./portfolio.module.css";
-
-// Register the necessary components
-ChartJS.register(
-  ArcElement,
-  Tooltip,
-  Legend,
-  Title,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  RadialLinearScale
-);
-
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
+import { db } from "../../firebaseconfig"; // Adjust the path as needed
+import AddStockPopup from "../../signupnextcomponent/AddStockPopup"; // Adjust the path as needed
+import StockDetailsPopup from "./StockDetailsPopup"; // Adjust the path as needed
+import styles from "./portfolio.module.css"; // Adjust the path as needed
+import SellStockPopup from "./SellStockPopup";
 const Portfolio: React.FC = () => {
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [isDetailsPopupVisible, setIsDetailsPopupVisible] = useState(false);
+  const [isSellPopupVisible, setIsSellPopupVisible] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
+  const [stocks, setStocks] = useState<any[]>([]); // State to store the list of stocks
+  const [totalValue, setTotalValue] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false); // State to handle loading
 
   useEffect(() => {
     const auth = getAuth();
-    onAuthStateChanged(auth, async (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         const uid = user.uid;
         const userDoc = await getDoc(doc(db, "users", uid));
@@ -46,80 +27,154 @@ const Portfolio: React.FC = () => {
         } else {
           console.log("No such document!");
         }
+        if (user.email) {
+          setUserEmail(user.email);
+          fetchUserStocks(user.email);
+        }
       } else {
         console.log("User is not signed in");
+        setUserEmail(null);
       }
     });
+
+    return () => unsubscribe();
   }, []);
 
-  const pieData = {
-    labels: ["Stock A", "Stock B", "Stock C"],
-    datasets: [
-      {
-        data: [300, 50, 100],
-        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
-        hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
-      },
-    ],
+  const fetchUserStocks = async (email: string) => {
+    setIsLoading(true);
+    try {
+      const stocksCollection = collection(db, "userstocks", email, "stocks");
+      const stocksSnapshot = await getDocs(stocksCollection);
+      const stocksList = stocksSnapshot.docs.map((doc) => doc.data());
+      setStocks(stocksList);
+    } catch (error) {
+      console.error("Error fetching user stocks:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchStockPrices = async () => {
+    setIsLoading(true); // Set loading state to true
+    try {
+      const prices = await Promise.all(
+        stocks.map(async (stock) => {
+          const response = await fetch(
+            `http://localhost:3001/api/stock?symbol=${stock.symbol}`
+          );
+          const data = await response.json();
+          console.log(
+            `Fetched price for ${stock.symbol}:`,
+            data.regularMarketPrice
+          );
+          return { ...stock, price: data.regularMarketPrice };
+        })
+      );
+      setStocks(prices);
+      const total = prices.reduce(
+        (acc, stock) => acc + stock.price * stock.quantity,
+        0
+      );
+      setTotalValue(total);
+    } catch (error) {
+      console.error("Error fetching stock prices:", error);
+    } finally {
+      setIsLoading(false); // Set loading state to false
+    }
+  };
+
+  useEffect(() => {
+    if (stocks.length > 0) {
+      fetchStockPrices();
+    } else {
+      setTotalValue(null);
+    }
+  }, [stocks.length]);
+
+  const handleButtonClick = () => {
+    setIsPopupVisible(true);
+  };
+
+  const handleClosePopup = () => {
+    setIsPopupVisible(false);
+  };
+
+  const handleAddStock = (stock: any) => {
+    setStocks((prevStocks) => [...prevStocks, stock]);
+  };
+
+  const handleOpenDetails = () => {
+    setIsDetailsPopupVisible(true);
+  };
+
+  const handleCloseDetailsPopup = () => {
+    setIsDetailsPopupVisible(false);
+  };
+
+  const handleSellButtonClick = () => {
+    setIsSellPopupVisible(true);
+  };
+
+  const handleCloseSellPopup = () => {
+    setIsSellPopupVisible(false);
+  };
+
+  const handleSellStock = (symbol: string, quantity: number) => {
+    setStocks((prevStocks) =>
+      prevStocks.map((stock) =>
+        stock.symbol === symbol
+          ? { ...stock, quantity: stock.quantity - quantity }
+          : stock
+      )
+    );
   };
 
   return (
     <div className={styles.container}>
-      <div className={styles.headerLeft}>
-        <div className={styles.companyInfo}>
-          Welcome {userName ? userName + "," : "Loading..."}
-        </div>
+      <div className={styles.header}>
+        <h1>Hey {userName ? userName : "Loading..."}</h1>
+        <h3>
+          Total Asset Value:{" "}
+          {isLoading
+            ? "Loading..."
+            : totalValue !== null
+            ? `$${totalValue.toFixed(2)}`
+            : "N/A"}
+        </h3>
       </div>
-      <div className={styles.content}>
-        <div className={styles.letcontainer}>
-          <div className={styles.cont1}>
-            <div className={styles.cont1div1}>
-              <p className={styles.cont1div1para}>Total Asset Value</p>
-              <div className={styles.cont1div1div1}>
-                <p className={styles.cont1div3para}>Rs 40.21 Lakh</p>{" "}
-              </div>
-            </div>
-            <div className={styles.cont1div2}>
-              <p className={styles.cont1div2para}>Gain vs Yesterday</p>
-              <div className={styles.cont1div2div1}>
-                <p className={styles.cont1div4para}>+2.34% </p>
-              </div>
-            </div>
-          </div>
-          <div className={styles.cont2}>
-            <p className={styles.cont2para}>Top Gainer/Looser</p>
-            <div className={styles.cont2div1}>
-              <div className={styles.cont2div1div1}>
-                <div className={styles.cont2div1para}>
-                  <p className={styles.cont2div1para1}>Gainers</p>
-                </div>
-                <div className={styles.gainercont}></div>
-              </div>
-              <div className={styles.cont2div1div2}>
-                <div className={styles.cont2div2para}>
-                  <p className={styles.cont2div2para1}>Looser</p>
-                </div>
-                <div className={styles.loosercont}></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className={styles.rightcontainer}>
-          <div className={styles.rightcontainerparadiv1}>
-            <p className={styles.rightcontainerdiv1para}>Assets Distribution</p>
-          </div>
-          <div className={styles.piechart}>
-            <Pie data={pieData} />
-          </div>
-          <div className={styles.buttondiv1}>
-            <button className={styles.button3}>Open Full Details</button>
-          </div>
-        </div>
+      <div className={styles.buttonContainer}>
+        <button className={styles.button} onClick={handleOpenDetails}>
+          Open Full Details
+        </button>
+        <button className={styles.button} onClick={handleButtonClick}>
+          Add Stock
+        </button>
+        <button className={styles.button} onClick={handleSellButtonClick}>
+          Sell Stock
+        </button>
       </div>
-      <div className={styles.buttondiv}>
-        <button className={styles.button1}>Add new stock</button>
-        <button className={styles.button2}>Sell stock</button>
-      </div>
+      {isPopupVisible && userEmail && (
+        <AddStockPopup
+          onClose={handleClosePopup}
+          onAddStock={handleAddStock}
+          email={userEmail}
+        />
+      )}
+      {isDetailsPopupVisible && (
+        <StockDetailsPopup
+          onClose={handleCloseDetailsPopup}
+          stocks={stocks}
+          totalValue={totalValue || 0}
+        />
+      )}
+      {isSellPopupVisible && userEmail && (
+        <SellStockPopup
+          onClose={handleCloseSellPopup}
+          email={userEmail}
+          stocks={stocks}
+          onSellStock={handleSellStock}
+        />
+      )}
     </div>
   );
 };
