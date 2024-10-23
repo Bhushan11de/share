@@ -183,5 +183,33 @@ def fetch_stock_data(stock_symbols):
         stock_data[symbol] = yf.download(symbol, period='1mo', interval='1d')['Close'].values
     return pd.DataFrame(stock_data)
 
+@app.route('/historic', methods=['GET'])
+def historic():
+    symbol = request.args.get('symbol')
+    range = request.args.get('range', '1mo')
+    
+    if not symbol:
+        return jsonify({'error': 'Stock symbol is required'}), 400
+    
+    # Convert '1wk' to '7d' for yfinance compatibility
+    if range == '1wk':
+        range = '5d'
+    
+    stock_data = yf.download(symbol, period=range, interval='1d')
+    
+    if stock_data.empty:
+        return jsonify({'error': 'Invalid stock symbol or no data available'}), 400
+    
+    stock_data['Date'] = stock_data.index
+    stock_data['Date'] = pd.to_datetime(stock_data['Date'])
+    stock_data['Close'] = stock_data['Close'].fillna(method='ffill')
+    
+    historic_data = {
+        'dates': stock_data['Date'].dt.strftime('%Y-%m-%d').tolist(),
+        'prices': stock_data['Close'].tolist()
+    }
+    
+    return jsonify(historic_data)
+
 if __name__ == '__main__':
     app.run(debug=True)

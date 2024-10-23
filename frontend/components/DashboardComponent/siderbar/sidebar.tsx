@@ -38,14 +38,14 @@ const Sidebar: React.FC = () => {
       </div>
       <div
         className={styles.menuItem}
-        onClick={() => handleNavigation("/dashboard")}
+        onClick={() => handleNavigation("/realtime")}
       >
         <img className={styles.logoImage} src={logoImage4.src} alt="Logo" />
         <span className={styles.menuText}>Real-Time</span>
       </div>
       <div
         className={styles.menuItem}
-        onClick={() => handleNavigation("/dashboard")}
+        onClick={() => handleNavigation("/historic")}
       >
         <img className={styles.logoImage} src={logoImage5.src} alt="Logo" />
         <span className={styles.menuText}>Historic</span>
