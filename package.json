@@ -5,10 +5,12 @@
   "main": "index.js",
   "scripts": {
     "dev": "cd frontend && npm run dev",
+    "build" : "cd frontend && npm run build",
     "server": "cd backend && npm run start",
+    "python-server": "cd server && source venv/bin/activate && cd api && python main.py",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Dhruv Choudhary",
   "license": "ISC",
   "dependencies": {
     "yahoo-finance2": "^2.13.2"
