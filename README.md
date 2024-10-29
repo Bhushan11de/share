@@ -60,7 +60,7 @@ A comprehensive stock market application built using Next.js, Express, and Fireb
 
 1. Navigate to the backend directory:
    ```bash
-   cd stock-market-app/backend
+   cd stock-market-app/server
    ```
 2. Create a virtual environment and activate it:
    ```bash
@@ -73,7 +73,7 @@ A comprehensive stock market application built using Next.js, Express, and Fireb
    ```
 4. Start the Flask server:
    ```bash
-   python app.py
+   python main.py
    ```
 
 ### Firebase

@@ -94,6 +94,7 @@ def forecast():
     }
     
     return jsonify(forecast_data)
+
 # --- Reinforcement Learning Route for Stock Recommendations --- 
 class StockTradingEnv(Env):
     def __init__(self, stock_data, portfolio):
@@ -180,8 +181,15 @@ def recommend_stocks():
 def fetch_stock_data(stock_symbols):
     stock_data = {}
     for symbol in stock_symbols:
-        stock_data[symbol] = yf.download(symbol, period='1mo', interval='1d')['Close'].values
-    return pd.DataFrame(stock_data)
+        stock_data[symbol] = yf.download(symbol, period='1mo', interval='1d')['Close']
+    
+    # Combine all stock data into a single DataFrame, aligning by date
+    combined_data = pd.DataFrame(stock_data)
+    
+    # Fill missing values
+    combined_data = combined_data.fillna(method='ffill').fillna(method='bfill')
+    
+    return combined_data
 
 @app.route('/historic', methods=['GET'])
 def historic():

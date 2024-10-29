@@ -1,8 +1,1 @@
-backend/node_modules
-backend/src/stock-app-a474d-firebase-adminsdk-pk0go-a1b0ce81a5.json
-backend/src/firebase-adminsdk.json
-.env.local
-frontend/.env.local
-frontend_main
-.env
 node_modules
