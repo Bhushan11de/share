@@ -7,7 +7,7 @@ import styles from "./signupnext.module.css";
 
 const SignupNext: React.FC = () => {
   const [name, setName] = useState("");
-  const [email, setEmail] = useState<string | null>("");
+  const [email, setEmail] = useState<string>("");
   const [stocks, setStocks] = useState<any[]>([]);
   const [showPopup, setShowPopup] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,7 +22,9 @@ const SignupNext: React.FC = () => {
         const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) {
           setName(userDoc.data().name);
-          setEmail(user.email);
+          if (user.email) {
+            setEmail(user.email);
+          }
         }
       } else {
         router.push("/signin"); // Redirect to sign-in if no user is logged in
