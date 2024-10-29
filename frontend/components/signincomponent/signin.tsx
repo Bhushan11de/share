@@ -10,7 +10,9 @@ const Signin: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
-
+  const handleNavigation = (path: string) => {
+    router.push(path);
+  };
   const handleSignin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -65,9 +67,12 @@ const Signin: React.FC = () => {
             </div>
             <p className={styles.createaccount}>
               Don't have an account?{" "}
-              <a href="/signup" className={styles.signuproute}>
+              <div
+                className={styles.signuproute}
+                onClick={() => handleNavigation("/signup")}
+              >
                 Sign Up
-              </a>
+              </div>
             </p>
             <button
               className={styles.buttontext}

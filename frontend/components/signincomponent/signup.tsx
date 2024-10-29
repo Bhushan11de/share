@@ -17,7 +17,6 @@ const Signup: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     setError("");
-
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -39,6 +38,10 @@ const Signup: React.FC = () => {
       setError("Failed to sign up. Please check your credentials.");
       setLoading(false);
     }
+  };
+
+  const handleNavigation = (path: string) => {
+    router.push(path);
   };
 
   return (
@@ -96,9 +99,12 @@ const Signup: React.FC = () => {
             </div>
             <p className={styles.createaccount}>
               Already have an account?{" "}
-              <a href="/signin" className={styles.signuproute}>
+              <div
+                className={styles.signuproute}
+                onClick={() => handleNavigation("/signin")}
+              >
                 Sign In
-              </a>
+              </div>
             </p>
             <button
               className={styles.buttontext}
