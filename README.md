@@ -1,5 +1,7 @@
 # Stock Market App
 
+Note- Prod doesnt have python flask server running
+
 A comprehensive stock market application built using Next.js, Express, and Firebase. This application allows users to manage their stock portfolio, get real-time stock data, forecast stock prices, and receive stock recommendations.
 
 ## Table of Contents
