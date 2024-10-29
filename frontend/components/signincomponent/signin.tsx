@@ -21,7 +21,7 @@ const Signin: React.FC = () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       setLoading(false);
-      router.push("/dashboard"); // Redirect to dashboard after successful sign-in
+      router.push("/dashboard");
     } catch (err) {
       setError("Failed to sign in. Please check your credentials.");
       setLoading(false);
@@ -66,7 +66,7 @@ const Signin: React.FC = () => {
               />
             </div>
             <p className={styles.createaccount}>
-              Don't have an account?{" "}
+              Dont have an account?{" "}
               <div
                 className={styles.signuproute}
                 onClick={() => handleNavigation("/signup")}
